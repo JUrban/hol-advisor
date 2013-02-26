@@ -1,10 +1,15 @@
-;; Asynchronous advising code fro HOL Light modified from mizar.el 
+;; Asynchronous code talking to the remote HOL Light proof advisor
+;; (mostly modified from mizar.el).
 ;;
 ;; SYNOPSIS: M-x hol-ask-advisor RET ~F ==> T RET
 ;;
-;; Use also ";;;" or C-ca .
-
-
+;; Use also ";;;" after a goal, or C-ca on a goal 
+;; (when inside the hol-light mode)
+;;
+;; License:     GPL (GNU GENERAL PUBLIC LICENSE) version 2 or later
+;; Contact:     Josef Urban (Josef dot Urban at gmail dot com) 
+;;
+;;
 ;; (defgroup hol-light nil
 ;;   "Major mode for authoring HOL articles"
 ;;   :group 'languages)
