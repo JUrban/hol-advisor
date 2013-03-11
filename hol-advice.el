@@ -14,6 +14,8 @@
 ;;   "Major mode for authoring HOL articles"
 ;;   :group 'languages)
 
+(require 'cl)
+
 (defgroup hol-proof-advisor nil
   "HOL Proof Advisor settings"
   :group 'hol-light)
