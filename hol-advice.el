@@ -360,3 +360,5 @@ Previous contents of BUFNAME is deleted. This is synchronous and may hang."
 ;;	(message "%s" (concat "http://" hol-advisor-server hol-atp-cgi arg-stuff))
         (url-retrieve (concat "http://" hol-advisor-server hol-atp-cgi arg-stuff)
                       (lambda (status) (switch-to-buffer (current-buffer))))))
+
+(provide 'hol-advice)
