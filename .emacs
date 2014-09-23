@@ -3,3 +3,4 @@
  (setq load-path (cons (substitute-in-file-name "$HOME/hol-advisor") load-path))
 (autoload 'hol-light-mode "hol-light" nil t)
 (setq auto-mode-alist (cons '("\\.ml$" . hol-light-mode) auto-mode-alist))
+(load-file (substitute-in-file-name "$HOME/hol-advisor/hol-advice.el"))
