@@ -134,7 +134,7 @@ Used automatically if `hol-atp-completion' is on."
 	      (let ((retbuf (match-string 1 bname))
 		    (retpos (match-string 2 bname))
 		    (retstr
-		     (if (string-match "Replaying: SUCCESS [^:]*: *\\(.*\\)" res)
+		     (if (string-match "SUCCESS [^:]*: *\\(.*\\)" res)
 			 (concat ";; e(" (match-string 1 res) ");;")
 		       ";; (* No ATP proof found *)")
 		     ))
@@ -357,5 +357,6 @@ Previous contents of BUFNAME is deleted. This is synchronous and may hang."
       (let ((url-request-method "GET")
             (arg-stuff (concat "?s=" (url-hexify-string session)
                          "&q=" (url-hexify-string query))))
+;;	(message "%s" (concat "http://" hol-advisor-server hol-atp-cgi arg-stuff))
         (url-retrieve (concat "http://" hol-advisor-server hol-atp-cgi arg-stuff)
                       (lambda (status) (switch-to-buffer (current-buffer))))))
