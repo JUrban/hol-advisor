@@ -2858,7 +2858,9 @@ I/O via buffer `*hol-light-toplevel*'."
 				  hol-light-interactive-program))))
   (if (not (comint-check-proc hol-light-interactive-buffer-name))
       (let ((cmdlist (hol-light-args-to-list hol-light-interactive-program))
-            (process-connection-type nil))
+;; JU: this breaks with DMTCP images - commented
+;;            (process-connection-type nil)
+)
 	(set-buffer (apply (function make-comint) "hol-light-toplevel"
 			   (car cmdlist) nil (cdr cmdlist)))
 	(hol-light-interactive-mode)
