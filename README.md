@@ -9,14 +9,19 @@ git clone https://github.com/JUrban/hol-advisor.git
 cat hol-advisor/.emacs >> .emacs
 ```
 
-Set up your server and project
+In Emacs, set up your server by pressing M-: and then pasting into the minibuffer:
 
 ```
 (customize-save-variable 'hol-advisor-server "mizar.cs.ualberta.ca")
+```
+
+Then customize the project (change "Emf199" to your project - it has to be uploaded to the server before), again by pressing M-: and pasting:
+
+```
 (customize-save-variable 'hol-current-project "Emf199")
 ```
 
-Setting the server back to Austria (for experiments with other projects):
+Setting the server back to Austria (for experiments with other projects) is done like this:
 
 ```
 (customize-save-variable 'hol-advisor-server "colo12-c703.uibk.ac.at")
