@@ -2854,8 +2854,10 @@ I/O via buffer `*hol-light-toplevel*'."
       (setq hol-light-interactive-program cmd)
     (if (not (comint-check-proc hol-light-interactive-buffer-name))
 	(setq hol-light-interactive-program
-	      (read-shell-command "Caml toplevel to run: "
-				  hol-light-interactive-program))))
+;; JU: trailing whitespace breaks make-comint
+	      (replace-regexp-in-string "[ \n\t]*$" ""
+					(read-shell-command "Caml toplevel to run: "
+				  hol-light-interactive-program)))))
   (if (not (comint-check-proc hol-light-interactive-buffer-name))
       (let ((cmdlist (hol-light-args-to-list hol-light-interactive-program))
 ;; JU: this breaks with DMTCP images - commented
