@@ -36,7 +36,7 @@ emacs test1.ml
 then type:
 
 ```
-g(`EVEN x \/ EVEN (x + 3)`);;;
+g(`EVEN x \/ EVEN (x + 1)`);;;
 ```
 
 and you should get:
