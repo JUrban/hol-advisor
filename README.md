@@ -1,7 +1,7 @@
 hol-advisor
 ===========
 
-1. Install the advisor:
+* Install the advisor:
 
 ```
 cd $HOME
@@ -22,7 +22,7 @@ Setting the server back to Austria (for experiments with other projects):
 (customize-save-variable 'hol-advisor-server "colo12-c703.uibk.ac.at")
 ```
 
-2. Test the advisor:
+* Test the advisor:
 
 ```
 emacs test1.ml
@@ -55,4 +55,4 @@ And sometimes there is no proof found (either it is too hard, or there is none):
 g(`n + n = 1`);; (* No ATP proof found *)
 ```
 
-3. Install and use DMTCP (optional)
+* Install and use DMTCP (optional)
