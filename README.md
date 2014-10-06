@@ -104,3 +104,10 @@ In the Emacs mode, this can be invoked from the menu (HOL Light -> Interactive M
 ```
 
 as the "Caml toplevel to run" .
+
+# Useful Emacs shortcuts
+
+```
+C-c C-s --- Run the toplevel
+C-x C-e --- Send the current line to the toplevel process
+```
