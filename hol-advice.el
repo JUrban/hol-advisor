@@ -15,6 +15,8 @@
 ;;   :group 'languages)
 
 (require 'cl)
+(require 'url)
+
 
 (defgroup hol-proof-advisor nil
   "HOL Proof Advisor settings"
@@ -23,6 +25,17 @@
 (defcustom hol-advisor-server "colo12-c703.uibk.ac.at" ;"mizar.cs.ualberta.ca"; 
 "Server for the HOL Proof Advisor."
 :type 'string
+:group 'hol-proof-advisor)
+
+(defcustom hol-current-project "Flyspeck"
+"The name of the project that we work on. 
+Needed to have persistance on the server."
+:type 'string
+:group 'hol-proof-advisor)
+
+(defcustom hol-query-timelimit 100
+"Maximum time for which we let one query be repeatedly asked to HH server."
+:type 'integer
 :group 'hol-proof-advisor)
 
 (defcustom hol-advisor-port 8080
@@ -47,16 +60,6 @@
 :group 'hol-proof-advisor)
 
 
-(defcustom hol-current-project "Flyspeck"
-"The name of the project that we work on. 
-Needed to have persistance on the server."
-:type 'string
-:group 'hol-proof-advisor)
-
-(defcustom hol-query-timelimit 100
-"Maximum time for which we let one query be repeatedly asked to HH server."
-:type 'integer
-:group 'hol-proof-advisor)
 
 
 (defun hol-semicolon (&optional arg)
@@ -65,7 +68,8 @@ Needed to have persistance on the server."
   (self-insert-command (prefix-numeric-value arg))
   (if (and hol-atp-completion
 	   (looking-back ";;;" (- (point) 3)))
-      (hol-atp-autocomplete)))
+;;      (hol-atp-autocomplete)))
+      (hol-atp-autocomplete1)))
 
 (defun hol-atp-autocomplete ()
 "Replace \";;;\" with \";; (* ATP asked ... *)\" and call ATP to justify the current step.
@@ -218,7 +222,7 @@ server checking if the query is finished."
 :type 'integer
 :group 'hol-proof-advisor)
 
-;; e.g.:  (hh-url-get-loop "Ramsey" "EVEN x \\/ EVEN (x + 5)" 'hh-check-url-buffer 20 "bla.hl" 300)
+;; e.g.:  (hh-url-get-loop "Ramsey" "EVEN x \\/ EVEN (x + 5)" 'hh-check-url-buffer 20 "bla.hl" "300")
 (defun hh-url-get-loop (session query pred tl0 buf pos)
 "Ask the HH server SESSION a QUERY with a time limit TL0.
 Repeat the query until (eval PRED) is true in the request buffer,
@@ -258,16 +262,22 @@ nil."
        (cond 
 	((eq (point) (point-min)) nil) ; return nil here - not complete yet
 	((looking-back "SUCCESS[^:]*:\\([^`]+\\)`")
-	 (list "S" (buffer-substring-no-properties (match-beginning 1) (match-end 1))))
+	 (list "S" 
+	       (concat ";; e(" (buffer-substring-no-properties (match-beginning 1) (match-end 1)) ");;")))
 	((looking-back "Minimized[^:]*:\\([^`]+\\)`")
-	 (list "M" (buffer-substring-no-properties (match-beginning 1) (match-end 1))))
+	 (list "M" (concat ";; (* reconstruction failed: " 
+			   (buffer-substring-no-properties (match-beginning 1) (match-end 1)) " *)")))
 	((looking-back "Result[^:]*:\\([^`]+\\)`")
-	 (list "R" (buffer-substring-no-properties (match-beginning 1) (match-end 1))))
+	 (list "R" (concat ";; (* reconstruction failed: " 
+	       (buffer-substring-no-properties (match-beginning 1) (match-end 1)) " *)" )))
 	((looking-back "No more advice`")
-	 (list "F" "No more advice"))
-	((looking-back "\\(.*\\)`") ; fallback - unknown stuff
-	 (list "U" (buffer-substring-no-properties (match-beginning 1) (match-end 1))))
-	(t (list "U" "Unknown"))))) ; safety
+	 (list "F" ";; (* No ATP proof found *)"))
+	((looking-back "retypecheck failed`")
+	 (list "F" ";; (* retypecheck failed *)"))
+	((looking-back "\\(.*\\)`" nil t) ; fallback - unknown stuff
+	 (list "U" (concat ";; (* Unknown error: " (buffer-substring-no-properties (match-beginning 1) (match-end 1)) " *)")))
+;	(t (list "U" "Unknown"))
+))) ; safety
       (if res (message "HH returned %s" (cadr res)))
       res))
 
@@ -357,7 +367,7 @@ Previous contents of BUFNAME is deleted. This is synchronous and may hang."
       (let ((url-request-method "GET")
             (arg-stuff (concat "?s=" (url-hexify-string session)
                          "&q=" (url-hexify-string query))))
-;;	(message "%s" (concat "http://" hol-advisor-server hol-atp-cgi arg-stuff))
+	(message "%s" (concat "http://" hol-advisor-server hol-atp-cgi arg-stuff))
         (url-retrieve (concat "http://" hol-advisor-server hol-atp-cgi arg-stuff)
                       (lambda (status) (switch-to-buffer (current-buffer))))))
 
