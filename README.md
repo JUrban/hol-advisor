@@ -1,7 +1,7 @@
-hol-advisor
-===========
+Using hol-advisor (HOL(y)Hammer) in Emacs
+=========================================
 
-# Install the advisor:
+# Install the advisor Emacs code:
 
 ```
 cd $HOME
@@ -55,4 +55,47 @@ And sometimes there is no proof found (either it is too hard, or there is none):
 g(`n + n = 1`);; (* No ATP proof found *)
 ```
 
+If everything fails, go to http://mizar.cs.ualberta.ca/hh/ or http://colo12-c703.uibk.ac.at/hh/ and first try with the web interface.
+
 # Install and use DMTCP (optional)
+
+Install DMTCP:
+
+```
+http://downloads.sourceforge.net/project/dmtcp/dmtcp-2.x/2.3.1/dmtcp-2.3.1.tar.gz
+tar xzf dmtcp-2.3.1.tar.gz
+cd dmtcp-2.3.1
+./configure
+make
+make install
+```
+
+Compile your project under DMTCP:
+
+```
+dmtcp_launch hol-light-workbench/ocaml/bin/ocaml
+```
+
+after loading your project, run in the session:
+
+```
+#load "unix.cma";;
+
+if Unix.fork () = 0 then Unix.execvp "dmtcp_command" [|""; "--checkpoint"|] else try ignore (Unix.select [] [] [] 0.1) with _ -> ();;
+```
+
+and then you can quit the session. A script called `dmtcp_restart_script.sh` should now appear in your working directory.
+
+Restore the session by running:
+
+```
+./dmtcp_restart_script.sh
+```
+
+In the Emacs mode, this can be invoked from the menu (HOL Light -> Interactive Mode -> Run Caml Toplevel) or by pressing C-c C-s and supplying
+
+```
+./dmtcp_restart_script.sh
+```
+
+as the "Caml toplevel to run" .
